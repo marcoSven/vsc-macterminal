@@ -1,15 +1,15 @@
 {
   "name": "macterminal",
-  "displayName": "marcoSvenMacTerminal",
+  "displayName": "MacTerminal",
   "publisher": "marcoSven",
   "homepage": "https://github.com/marcosven/vsc-macterminal",
   "repository": {
     "type": "git",
     "url": "https://github.com/marcosven/vsc-macterminal"
   },
-  "description": "Open external terminal from explorer.",
+  "description": "Open external terminal.",
   "icon": "images/logo.jpg",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "engines": {
     "vscode": "^1.61.0"
   },
@@ -17,20 +17,38 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:macterminal.openfolder"
+    "onCommand:macterminal.openFolderInTerminal",
+    "onCommand:macterminal.openCurrentTabFileInTerminal"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "macterminal.openfolder",
+        "command": "macterminal.openFolderInTerminal",
         "title": "Open in External Terminal"
+      },
+      {
+        "command": "macterminal.openCurrentTabFileInTerminal",
+        "title": "Open File in External Terminal"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "macterminal.openCurrentTabFileInTerminal",
+        "mac": "cmd+shift+c",
+        "when": "editorTextFocus"
       }
     ],
     "menus": {
       "explorer/context": [
         {
-          "command": "macterminal.openfolder",
+          "command": "macterminal.openFolderInTerminal",
+          "group": "navigation@31"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "macterminal.openCurrentTabFileInTerminal",
           "group": "navigation@31"
         }
       ]

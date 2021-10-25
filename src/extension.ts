@@ -5,10 +5,13 @@ import * as fs from "fs";
 import * as path from "path";
 
 export function activate(context: vscode.ExtensionContext) {
-  const openFolder = vscode.commands.registerCommand(
-    "macterminal.openfolder",
+  const disposableOpenFolderInTerminal = vscode.commands.registerCommand(
+    "macterminal.openFolderInTerminal",
     (e) => {
       const cmd = vscode.workspace.getConfiguration("terminal").external;
+      if (!e || !e.fsPath) {
+        return;
+      }
       if (process.platform === "darwin") {
         child_process.exec(
           `open -a ${cmd.osxExec || "Terminal.app"} "${getPath(e.fsPath)}"`
@@ -16,7 +19,29 @@ export function activate(context: vscode.ExtensionContext) {
       }
     }
   );
-  context.subscriptions.push(openFolder);
+
+  const disposableOpenCurrentTabFileInTerminal =
+    vscode.commands.registerCommand(
+      "macterminal.openCurrentTabFileInTerminal",
+      () => {
+        const cmd = vscode.workspace.getConfiguration("terminal").external;
+        const currentTabFilePath =
+          vscode.window.activeTextEditor?.document.fileName;
+        if (currentTabFilePath && process.platform === "darwin") {
+          child_process.exec(
+            `open -a ${cmd.osxExec || "Terminal.app"} "${getPath(
+              currentTabFilePath
+            )}"`
+          );
+        }
+        return;
+      }
+    );
+
+  context.subscriptions.push(
+    disposableOpenFolderInTerminal,
+    disposableOpenCurrentTabFileInTerminal
+  );
 }
 
 function getPath(fsPath: string) {
